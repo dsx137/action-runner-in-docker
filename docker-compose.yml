@@ -8,6 +8,7 @@ services:
       - ACCESS_TOKEN=${TOKEN}
       - EPHEMERAL=true
       - ACTIONS_RESULTS_URL=http://cache-server:3000/
+      - LABELS=${LABELS}
     entrypoint: ["/patched-entrypoint.sh"]
     command: ["./bin/Runner.Listener", "run", "--startuptype", "service"]
     volumes:

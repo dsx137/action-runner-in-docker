@@ -1,0 +1,12 @@
+[Unit]
+Description=Init GitHub Runners via Compose
+After=network.target docker.service
+
+[Service]
+WorkingDirectory=/root/without-swarm/action-runner-in-docker
+ExecStart=/root/without-swarm/action-runner-in-docker/run.sh
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

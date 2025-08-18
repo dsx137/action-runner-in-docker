@@ -3,8 +3,8 @@ Description=Init GitHub Runners via Compose
 After=network.target docker.service
 
 [Service]
-WorkingDirectory=/root/without-swarm/action-runner-in-docker
-ExecStart=/root/without-swarm/action-runner-in-docker/run.sh
+WorkingDirectory=/root/action-runner-in-docker/compose
+ExecStart=./daemon.sh
 User=root
 Group=root
 

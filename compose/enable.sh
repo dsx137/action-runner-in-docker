@@ -2,7 +2,7 @@
 
 cd "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")" || return 1
 
-cp ./actions-runner-in-docker.service /etc/systemd/system/action-runner-in-docker.service
+cp ./action-runner-in-docker.service /etc/systemd/system/action-runner-in-docker.service
 systemctl daemon-reload
 systemctl enable action-runner-in-docker.service
 systemctl start action-runner-in-docker.service

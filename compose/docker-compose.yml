@@ -19,4 +19,4 @@ services:
       API_BASE_URL: http://cache-server:3000
     volumes:
       - ./cache-data:/app/.data:rw
-    restart: always
+    restart: unless-stopped

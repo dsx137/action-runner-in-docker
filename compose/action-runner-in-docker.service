@@ -4,7 +4,8 @@ After=network.target docker.service
 
 [Service]
 WorkingDirectory=/root/action-runner-in-docker/compose
-ExecStart=./daemon.sh
+ExecStart=/root/action-runner-in-docker/compose/daemon.sh
+Restart=always
 User=root
 Group=root
 

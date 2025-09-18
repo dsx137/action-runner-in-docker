@@ -4,7 +4,7 @@ cd "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")" || return 1
 
 SCALE="${SCALE:-1}"
 WITH_DOCKER_SOCKET="${WITH_DOCKER_SOCKET:-false}"
-COMPOSE_FILE="docker-compose.yml"
+COMPOSE_FILE=("-f" "docker-compose.yml")
 
 if [ -z "$ACCESS_TOKEN" ]; then
     echo "Empty ACCESS_TOKEN"
@@ -17,7 +17,7 @@ if [ -z "$ORG_NAME" ]; then
 fi
 
 if [ "$WITH_DOCKER_SOCKET" = true ]; then
-    COMPOSE_FILE="docker-compose.with-docker-socket.yml"
+    COMPOSE_FILE+=("-f" "docker-compose.with-docker-socket.yml")
     echo "Setting with docker socket..."
 fi
 
@@ -36,8 +36,12 @@ function MAIN() {
     
     echo "Starting Daemon..."
     while true; do
-        docker compose rm -f github-runner 2>/dev/null
-        docker compose -f "$COMPOSE_FILE" up -d --scale github-runner="$SCALE" 2>&1 | grep -E 'Creating|Recreating|Restarting'
+        local current_count="$(docker compose "${COMPOSE_FILE[@]}" ps -q | wc -l)"
+        if [ "$current_count" -lt "$SCALE" ]; then
+            echo "Current runner count ($current_count) is less than desired scale ($SCALE). Scaling up..."
+            docker compose rm -f github-runner 2>/dev/null
+            docker compose "${COMPOSE_FILE[@]}" up -d --scale github-runner="$SCALE" 2>&1 | grep -E 'Creating|Recreating|Restarting'
+        fi
         sleep 1
     done
 }

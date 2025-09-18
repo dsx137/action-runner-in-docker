@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+exec 2>&1
+
+export ACTIONS_RESULTS_URL="${API_BASE_URL:-http://arid:3000}"
+
+cd "$(dirname "${BASH_SOURCE[0]}")" || return 1
+exec ./daemon.sh

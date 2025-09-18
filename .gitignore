@@ -1,5 +1,4 @@
 **/.env
 **/cache-data
-**/patched-entrypoint.sh
 
 !common/patched-entrypoint.sh

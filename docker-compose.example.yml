@@ -1,6 +1,6 @@
 services:
   arid:
-    image: mytest:1
+    image: ghcr.io/dsx137/action-runner-in-docker/arid:latest
     restart: unless-stopped
     environment:
       ORG_NAME: ${ORG_NAME}

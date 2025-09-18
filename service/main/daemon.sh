@@ -31,18 +31,21 @@ function EXIT() {
     docker compose down
 }
 
+function SCALE() {
+    docker compose rm -f github-runner 2>/dev/null
+    docker compose "${COMPOSE_FILE[@]}" up -d --scale github-runner="$SCALE" 2>&1 | grep -E 'Creating|Recreating|Restarting'
+}
+
 function MAIN() {
     trap 'exit 0' SIGINT SIGTERM SIGALRM
     
     echo "Starting Daemon..."
-    while true; do
-        local current_count="$(docker compose "${COMPOSE_FILE[@]}" ps -q | wc -l)"
-        if [ "$current_count" -lt "$SCALE" ]; then
-            echo "Current runner count ($current_count) is less than desired scale ($SCALE). Scaling up..."
-            docker compose rm -f github-runner 2>/dev/null
-            docker compose "${COMPOSE_FILE[@]}" up -d --scale github-runner="$SCALE" 2>&1 | grep -E 'Creating|Recreating|Restarting'
-        fi
-        sleep 1
+    
+    SCALE
+    
+    docker events --filter 'type=container' --filter 'event=die' --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" --format '{{.ID}}' | while read -r container_id; do
+        echo "Container ${container_id:0:12} has stopped. Triggering scale..."
+        SCALE
     done
 }
 

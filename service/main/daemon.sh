@@ -27,6 +27,8 @@ export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-action-runner-in-docker}"
 
 function EXIT() {
     kill "$PID" 2>/dev/null || true
+    pkill -f 'docker events'
+    
     echo "Stopping Daemon..."
     docker compose down
 }

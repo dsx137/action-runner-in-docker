@@ -5,8 +5,10 @@ services:
     environment:
       ORG_NAME: ${ORG_NAME}
       ACCESS_TOKEN: ${ACCESS_TOKEN}
-      LABELS=$: ${LABELS}
+      LABELS: ${LABELS}
       SCALE: ${SCALE}
+      API_BASE_URL: ${API_BASE_URL}
+      WITH_DOCKER_SOCKET: ${WITH_DOCKER_SOCKET}
     volumes:
       - ./cache-data:/app/.data:rw
       - /var/run/docker.sock:/var/run/docker.sock:rw

@@ -17,7 +17,7 @@ if [ -z "$ORG_NAME" ]; then
 fi
 
 if [ "$WITH_DOCKER_SOCKET" = true ]; then
-    COMPOSE_FILE="docker-compose-with-docker-socket.yml"
+    COMPOSE_FILE="docker-compose.with-docker-socket.yml"
     echo "Setting with docker socket..."
 fi
 

@@ -1,0 +1,12 @@
+services:
+  arid:
+    image: mytest:1
+    restart: unless-stopped
+    environment:
+      ORG_NAME: ${ORG_NAME}
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
+      LABELS=$: ${LABELS}
+      SCALE: ${SCALE}
+    volumes:
+      - ./cache-data:/app/.data:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw

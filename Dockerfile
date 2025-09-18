@@ -1,6 +1,6 @@
 FROM ghcr.io/falcondev-oss/github-actions-cache-server:latest
 
-RUN apk update && apk add bash docker-cli docker-cli-compose
+RUN apk update && apk add bash docker-cli
 
 COPY ./service /etc/service
 RUN chmod -R +x /etc/service

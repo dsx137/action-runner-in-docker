@@ -45,7 +45,7 @@ function MAIN() {
     
     SCALE
     
-    docker events --filter 'type=container' --filter 'event=die' --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" --format '{{.ID}}' | while read -r container_id; do
+    docker events --filter 'type=container' --filter 'event=die' --filter "label=com.docker.compose.project=${COMPOSE_PROJECT_NAME}" --format '{{.Actor.ID}}' | while read -r container_id; do
         echo "Container ${container_id:0:12} has stopped. Triggering scale..."
         SCALE
     done

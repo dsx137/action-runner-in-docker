@@ -3,6 +3,7 @@
 cd "$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")" || return 1
 
 SCALE="${SCALE:-1}"
+SCALE_RETRY_DELAY="${SCALE_RETRY_DELAY:-3}"
 WITH_DOCKER_SOCKET="${WITH_DOCKER_SOCKET:-false}"
 COMPOSE_FILE=("-f" "docker-compose.yml")
 
@@ -34,8 +35,24 @@ function EXIT() {
 }
 
 function SCALE() {
-    docker compose rm -f github-runner 2>/dev/null
-    docker compose "${COMPOSE_FILE[@]}" up -d --scale github-runner="$SCALE" 2>&1 | grep -E 'Creating|Recreating|Restarting'
+    local attempt=1
+    while true; do
+        docker compose rm -f github-runner 2>/dev/null
+        local output status
+        output=$(docker compose "${COMPOSE_FILE[@]}" up -d --scale github-runner="$SCALE" 2>&1)
+        status=$?
+
+        if [ "$status" -eq 0 ]; then
+            echo "$output" | grep -E 'Creating|Recreating|Restarting' || true
+            return 0
+        fi
+
+        echo "Scale failed (attempt $attempt):"
+        echo "$output"
+        echo "Retrying scale in ${SCALE_RETRY_DELAY}s..."
+        sleep "$SCALE_RETRY_DELAY"
+        attempt=$((attempt + 1))
+    done
 }
 
 function MAIN() {
